@@ -1,27 +1,22 @@
 package fi.haagahelia.working_hours_management.domain;
 
-public class Employee {
+public class Manager {
     private Long id;
     private String firstName;
     private String lastName;
     private String securityNumber;
     private String startDate;
-    private String position;
-    private Long managerId;
 
-    public Employee() {
+    public Manager(){
 
     }
 
-    public Employee(Long id, String firstName, String lastName, String securityNumber, String startDate,
-            String position, Long managerId) {
+    public Manager(Long id, String firstName, String lastName, String securityNumber, String startDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.securityNumber = securityNumber;
         this.startDate = startDate;
-        this.position = position;
-        this.managerId = managerId;
     }
 
     public Long getId() {
@@ -63,23 +58,6 @@ public class Employee {
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public Long getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
-    }
-
 
 
 }
