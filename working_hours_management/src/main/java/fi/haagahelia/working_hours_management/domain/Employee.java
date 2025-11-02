@@ -4,6 +4,7 @@ public class Employee {
     private Long id;
     private String firstName;
     private String lastName;
+    private String email;
     private String securityNumber;
     private String startDate;
     private String position;
@@ -13,11 +14,12 @@ public class Employee {
 
     }
 
-    public Employee(Long id, String firstName, String lastName, String securityNumber, String startDate,
+    public Employee(Long id, String firstName, String lastName, String email, String securityNumber, String startDate,
             String position, Long managerId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
         this.securityNumber = securityNumber;
         this.startDate = startDate;
         this.position = position;
@@ -46,6 +48,14 @@ public class Employee {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getSecurityNumber() {
@@ -79,7 +89,5 @@ public class Employee {
     public void setManagerId(Long managerId) {
         this.managerId = managerId;
     }
-
-
 
 }
