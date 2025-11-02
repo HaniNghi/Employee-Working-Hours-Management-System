@@ -2,6 +2,7 @@ package fi.haagahelia.working_hours_management.domain;
 
 public class User {
 
+    private Long id;
     private String username;
     private String passwordHash;
     private String role;
@@ -39,5 +40,14 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
 }

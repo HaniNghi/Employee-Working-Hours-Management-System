@@ -14,9 +14,9 @@ public class Employee {
 
     }
 
-    public Employee(Long id, String firstName, String lastName, String email, String securityNumber, String startDate,
+
+    public Employee(String firstName, String lastName, String email, String securityNumber, String startDate,
             String position, Long managerId) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -25,6 +25,8 @@ public class Employee {
         this.position = position;
         this.managerId = managerId;
     }
+
+
 
     public Long getId() {
         return id;

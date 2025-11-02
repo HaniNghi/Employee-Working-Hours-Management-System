@@ -12,8 +12,7 @@ public class Manager {
 
     }
 
-    public Manager(Long id, String firstName, String lastName, String email, String securityNumber, String startDate) {
-        this.id = id;
+    public Manager(String firstName, String lastName, String email, String securityNumber, String startDate) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
