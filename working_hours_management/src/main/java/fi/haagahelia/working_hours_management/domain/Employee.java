@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Employee {
@@ -17,21 +19,24 @@ public class Employee {
     private String securityNumber;
     private String startDate;
     private String position;
-    private Long managerId;
+
+    @ManyToOne
+    @JoinColumn(name = "managerId")
+    private Manager manager;
 
     public Employee() {
 
     }
 
     public Employee(String firstName, String lastName, String email, String securityNumber, String startDate,
-            String position, Long managerId) {
+            String position, Manager manager) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.securityNumber = securityNumber;
         this.startDate = startDate;
         this.position = position;
-        this.managerId = managerId;
+        this.manager = manager;
     }
 
     public Long getId() {
@@ -90,12 +95,13 @@ public class Employee {
         this.position = position;
     }
 
-    public Long getManagerId() {
-        return managerId;
+    public Manager getManager() {
+        return manager;
     }
 
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
+    public void setManager(Manager manager) {
+        this.manager = manager;
     }
+
 
 }

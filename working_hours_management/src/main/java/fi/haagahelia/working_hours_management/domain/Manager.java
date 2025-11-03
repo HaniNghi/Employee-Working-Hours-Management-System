@@ -1,31 +1,37 @@
 package fi.haagahelia.working_hours_management.domain;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 @Entity
 public class Manager {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "manager")
+    private List<Employee> employees;
+
     private String firstName;
     private String lastName;
     private String email;
-    private String securityNumber;
-    private String startDate;
+
 
     public Manager() {
 
     }
 
-    public Manager(String firstName, String lastName, String email, String securityNumber, String startDate) {
+    public Manager(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.securityNumber = securityNumber;
-        this.startDate = startDate;
+
     }
 
     public Long getId() {
@@ -59,21 +65,4 @@ public class Manager {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public String getSecurityNumber() {
-        return securityNumber;
-    }
-
-    public void setSecurityNumber(String securityNumber) {
-        this.securityNumber = securityNumber;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
 }
