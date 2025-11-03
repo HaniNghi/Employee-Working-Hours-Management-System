@@ -1,6 +1,15 @@
 package fi.haagahelia.working_hours_management.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String firstName;
     private String lastName;
@@ -14,7 +23,6 @@ public class Employee {
 
     }
 
-
     public Employee(String firstName, String lastName, String email, String securityNumber, String startDate,
             String position, Long managerId) {
         this.firstName = firstName;
@@ -25,8 +33,6 @@ public class Employee {
         this.position = position;
         this.managerId = managerId;
     }
-
-
 
     public Long getId() {
         return id;

@@ -1,6 +1,14 @@
 package fi.haagahelia.working_hours_management.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+@Entity
 public class Manager {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String firstName;
     private String lastName;
@@ -8,7 +16,7 @@ public class Manager {
     private String securityNumber;
     private String startDate;
 
-    public Manager(){
+    public Manager() {
 
     }
 
@@ -67,8 +75,5 @@ public class Manager {
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
-
-
-
 
 }
