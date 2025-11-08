@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import fi.haagahelia.working_hours_management.domain.Employee;
 import fi.haagahelia.working_hours_management.domain.EmployeeRepository;
@@ -64,6 +65,20 @@ public class WorkHoursController {
 
         model.addAttribute("workMap", workMap);
         return "workhour";
+    }
+
+    @RequestMapping(value = { "/addemployee" })
+    public String addEmployee(Model model) {
+        model.addAttribute("employee", new Employee());
+        model.addAttribute("managers", managerRepository.findAll());
+        model.addAttribute("workhour", new WorkHour());
+        return "addemployee";
+    }
+
+    @RequestMapping(value = { "/save" }, method = RequestMethod.POST)
+    public String save(Employee employee) {
+        employeeRepository.save(employee);
+        return "redirect:workhour";
     }
 
 }

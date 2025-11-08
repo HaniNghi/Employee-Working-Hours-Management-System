@@ -13,18 +13,12 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
-            <th>Security Number</th>
-            <th>Start Date</th>
-            <th>Position</th>
             <th>Manager</th>
         </tr>
         <tr th:each="employee : ${employees}">
             <td th:text="${employee.firstName}"></td>
             <td th:text="${employee.lastName}"></td>
             <td th:text="${employee.email}"></td>
-            <td th:text="${employee.securityNumber}"></td>
-            <td th:text="${employee.startDate}"></td>
-            <td th:text="${employee.position}"></td>
             <td th:text="${employee.manager.firstName}"></td>
 
         </tr>
