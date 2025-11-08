@@ -24,7 +24,6 @@
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>
-                <th>ID</th>
                 <th>Employee</th>
                 <th>Mon</th>
                 <th>Tue</th>
@@ -36,7 +35,6 @@
         </thead>
         <tbody>
             <tr th:each="entry : ${workMap}">
-                <td th:text="${entry.key.id}"></td>
                 <td th:text="${entry.key.firstName + ' ' + entry.key.lastName}"></td>
 
                 <td

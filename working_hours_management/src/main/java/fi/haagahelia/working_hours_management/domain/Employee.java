@@ -20,9 +20,7 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String email;
-    private String securityNumber;
-    private String startDate;
-    private String position;
+
 
     @ManyToOne
     @JoinColumn(name = "managerId")
@@ -37,14 +35,10 @@ public class Employee {
 
     }
 
-    public Employee(String firstName, String lastName, String email, String securityNumber, String startDate,
-            String position, Manager manager) {
+    public Employee(String firstName, String lastName, String email, Manager manager) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.securityNumber = securityNumber;
-        this.startDate = startDate;
-        this.position = position;
         this.manager = manager;
     }
 
@@ -78,30 +72,6 @@ public class Employee {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSecurityNumber() {
-        return securityNumber;
-    }
-
-    public void setSecurityNumber(String securityNumber) {
-        this.securityNumber = securityNumber;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
     }
 
     public Manager getManager() {
