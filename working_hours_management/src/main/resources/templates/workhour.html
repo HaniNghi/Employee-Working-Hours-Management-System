@@ -4,9 +4,66 @@
 <head>
     <title>Working Hours List</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <style>
+        th,
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table {
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-light">
+    <h2 class="text-center mb-4">Employee Weekly Work Schedule</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Employee</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Sun</th>
+                <th>Manager</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${workMap}">
+                <td th:text="${entry.key.firstName + ' ' + entry.key.lastName}"></td>
+
+                <td
+                    th:text="${entry.value['MONDAY'] != null ? entry.value['MONDAY'].checkIn + ' - ' + entry.value['MONDAY'].checkOut : '-'}">
+                </td>
+                <td
+                    th:text="${entry.value['TUESDAY'] != null ? entry.value['TUESDAY'].checkIn + ' - ' + entry.value['TUESDAY'].checkOut : '-'}">
+                </td>
+                <td
+                    th:text="${entry.value['WEDNESDAY'] != null ? entry.value['WEDNESDAY'].checkIn + ' - ' + entry.value['WEDNESDAY'].checkOut : '-'}">
+                </td>
+                <td
+                    th:text="${entry.value['THURSDAY'] != null ? entry.value['THURSDAY'].checkIn + ' - ' + entry.value['THURSDAY'].checkOut : '-'}">
+                </td>
+                <td
+                    th:text="${entry.value['FRIDAY'] != null ? entry.value['FRIDAY'].checkIn + ' - ' + entry.value['FRIDAY'].checkOut : '-'}">
+                </td>
+                <td
+                    th:text="${entry.value['SATURDAY'] != null ? entry.value['SATURDAY'].checkIn + ' - ' + entry.value['SATURDAY'].checkOut : '-'}">
+                </td>
+                <td
+                    th:text="${entry.value['SUNDAY'] != null ? entry.value['SUNDAY'].checkIn + ' - ' + entry.value['SUNDAY'].checkOut : '-'}">
+                </td>
+                <td th:text="${entry.key.manager.firstName + ' ' + entry.key.manager.lastName}"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 
 </html>
