@@ -2,6 +2,7 @@ package fi.haagahelia.working_hours_management;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Random;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -76,28 +77,23 @@ public class WorkingHoursManagementApplication {
             employeeRepository.save(new Employee("Ella", "Perez", "ella.perez@company.com", "EMP020", "2023-01-05",
                     "HR Specialist", manager1));
 
-            // Generate fake work hours for 20 employees (Mon–Sun)
-            LocalDate startDate = LocalDate.of(2025, 11, 3); // Monday
+            Random random = new Random();
 
-            for (long empId = 1L; empId <= 20L; empId++) {
-                Employee employee = employeeRepository.findById(empId).orElse(null);
-                if (employee == null)
-                    continue;
-
-                for (int i = 0; i < 7; i++) {
-                    LocalDate workDate = startDate.plusDays(i);
-
-                    // Randomize check-in/check-out time a bit
-                    LocalTime checkIn = LocalTime.of(8 + (i % 3), 0); // 8:00, 9:00, 10:00
-                    LocalTime checkOut = checkIn.plusHours(8); // 8 hours shift
+            for (long employeeId = 1; employeeId <= 20; employeeId++) {
+                LocalDate date = LocalDate.of(2025, 11, 3);
+                for (int i = 0; i < 5; i++) { // 5 days work
+                    int startHour = 8 + random.nextInt(4); // random start time 8am-11am
+                    LocalTime startTime = LocalTime.of(startHour, random.nextBoolean() ? 0 : 30); // 0 or 30 mins
+                    LocalTime endTime = startTime.plusHours(8);
 
                     workHourRepository.save(new WorkHour(
-                            workDate,
-                            checkIn,
-                            checkOut,
-                            employee));
-                }
+                            date,
+                            startTime,
+                            endTime,
+                            employeeRepository.findById(employeeId).get()));
 
+                    date = date.plusDays(1);
+                }
             }
             ;
         };

@@ -24,19 +24,19 @@
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>
+                <th>ID</th>
                 <th>Employee</th>
                 <th>Mon</th>
                 <th>Tue</th>
                 <th>Wed</th>
                 <th>Thu</th>
                 <th>Fri</th>
-                <th>Sat</th>
-                <th>Sun</th>
                 <th>Manager</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="entry : ${workMap}">
+                <td th:text="${entry.key.id}"></td>
                 <td th:text="${entry.key.firstName + ' ' + entry.key.lastName}"></td>
 
                 <td
@@ -53,12 +53,6 @@
                 </td>
                 <td
                     th:text="${entry.value['FRIDAY'] != null ? entry.value['FRIDAY'].checkIn + ' - ' + entry.value['FRIDAY'].checkOut : '-'}">
-                </td>
-                <td
-                    th:text="${entry.value['SATURDAY'] != null ? entry.value['SATURDAY'].checkIn + ' - ' + entry.value['SATURDAY'].checkOut : '-'}">
-                </td>
-                <td
-                    th:text="${entry.value['SUNDAY'] != null ? entry.value['SUNDAY'].checkIn + ' - ' + entry.value['SUNDAY'].checkOut : '-'}">
                 </td>
                 <td th:text="${entry.key.manager.firstName + ' ' + entry.key.manager.lastName}"></td>
             </tr>
