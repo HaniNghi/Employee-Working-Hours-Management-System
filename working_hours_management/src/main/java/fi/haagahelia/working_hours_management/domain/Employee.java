@@ -1,11 +1,15 @@
 package fi.haagahelia.working_hours_management.domain;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Employee {
@@ -23,6 +27,11 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "managerId")
     private Manager manager;
+
+    @OneToMany
+    private List<WorkHour> workHours;
+
+
 
     public Employee() {
 
@@ -102,6 +111,17 @@ public class Employee {
     public void setManager(Manager manager) {
         this.manager = manager;
     }
+
+    public List<WorkHour> getWorkHours() {
+        return workHours;
+    }
+
+    public void setWorkHours(List<WorkHour> workHours) {
+        this.workHours = workHours;
+    }
+
+
+
 
 
 }

@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class WorkHour {
@@ -18,14 +20,19 @@ public class WorkHour {
     private LocalTime checkIn;
     private LocalTime checkOut;
 
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
     public WorkHour() {
 
     }
 
-    public WorkHour(LocalDate date, LocalTime checkIn, LocalTime checkOut) {
+    public WorkHour(LocalDate date, LocalTime checkIn, LocalTime checkOut, Employee employee) {
         this.date = date;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        this.employee = employee;
     }
 
     public Long getId() {
@@ -59,5 +66,14 @@ public class WorkHour {
     public void setCheckOut(LocalTime checkOut) {
         this.checkOut = checkOut;
     }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
 
 }
