@@ -7,24 +7,24 @@
     <style>
         form>div {
             display: flex;
-            justify-content: space-between ;
+            justify-content: space-between;
             margin-bottom: 1rem;
         }
-        form{
+
+        form {
             width: 300px;
         }
-        .manager-list-container > select {
+
+        .manager-list-container>select {
             width: 170px;
         }
     </style>
-
 </head>
 
 <body>
     <h1>Add employee</h1>
     <div>
-        <form th:object="${employee}"
-            th:action="@{/save}" action="#" method="post">
+        <form th:object="${employee}" th:action="@{/save}" action="#" method="post">
             <div class="first-name-container">
                 <label for="firstName">First name</label>
                 <input type="text" id="fistName" th:field="*{firstName}" />
@@ -48,6 +48,22 @@
                 </select>
             </div>
 
+
+            <hr />
+            <h3>First day</h3>
+
+            <div th:object="${workhour}">
+                <label>Date:</label>
+                <input type="date" th:field="*{date}" required/>
+
+                <label>Check-in:</label>
+                <input type="time" th:field="*{checkIn}" required/>
+
+                <label>Check-out:</label>
+                <input type="time" th:field="*{checkOut}" required/>
+            </div>
+
+            <br />
             <div class="save-container">
                 <input class="btn btn-success" type="submit" value="Save" />
             </div>

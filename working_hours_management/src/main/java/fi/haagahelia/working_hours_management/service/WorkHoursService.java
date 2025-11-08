@@ -22,4 +22,6 @@ public class WorkHoursService {
     public List<WorkHour> getAllWorkHours() {
         return (List<WorkHour>) workHourRepository.findAll();
     }
+
+
 }

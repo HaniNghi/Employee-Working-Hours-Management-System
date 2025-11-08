@@ -2,6 +2,7 @@ package fi.haagahelia.working_hours_management.domain;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +27,7 @@ public class Employee {
     @JoinColumn(name = "managerId")
     private Manager manager;
 
-    @OneToMany
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.REMOVE)
     private List<WorkHour> workHours;
 
 

@@ -14,15 +14,27 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Manager</th>
+            <th>Delete Employee</th>
+            <th>Edit working time</th>
+
+
         </tr>
         <tr th:each="employee : ${employees}">
             <td th:text="${employee.firstName}"></td>
             <td th:text="${employee.lastName}"></td>
             <td th:text="${employee.email}"></td>
             <td th:text="${employee.manager.firstName}"></td>
+            <td >
+                <a class="btn btn-success" th:href="@{/delete/{id}(id=${employee.id})}">Delete</a>
+            </td>
+            <td >
+                <a class="btn btn-success" th:href="@{/edit/{id}(id=${employee.id})}">Edit</a>
+            </td>
 
         </tr>
     </table>
+    <a href="/workhour" class="btn btn-primary">View work hours</a>
+
 </body>
 
 </html>
