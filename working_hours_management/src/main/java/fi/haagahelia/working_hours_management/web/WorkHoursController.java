@@ -2,9 +2,12 @@ package fi.haagahelia.working_hours_management.web;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,27 +49,37 @@ public class WorkHoursController {
         return "worklist";
     }
 
-    @RequestMapping("/workhour")
+    @RequestMapping(value = { "/workhour" })
     public String workhour(Model model) {
         List<WorkHour> workHours = workHoursService.getAllWorkHours();
 
-        Map<Employee, Map<String, WorkHour>> workMap = new LinkedHashMap<>();
+        Map<Employee, Map<LocalDate, WorkHour>> workMap = new LinkedHashMap<>();
 
-        // Group all WorkHour entries by each employee
-        // Convert List<WorkHour> into Map<String, WorkHour>
-        // key = day of the week as a string ("MONDAY", "TUESDAY", ...)
-        // value = the corresponding WorkHour object
+        // group work hours by employee
         workHours.stream()
-                .collect(Collectors.groupingBy(WorkHour::getEmployee))
+                .collect(Collectors.groupingBy(WorkHour::getEmployee,
+                        () -> new TreeMap<>(Comparator.comparing(Employee::getId)), // sorting by id
+                        Collectors.toList()))
                 .forEach((employee, whList) -> {
-                    Map<String, WorkHour> dayMap = whList.stream()
+                    Map<LocalDate, WorkHour> dayMap = whList.stream()
                             .collect(Collectors.toMap(
-                                    w -> w.getDate().getDayOfWeek().name(), // key = day name
-                                    w -> w));
+                                    WorkHour::getDate,
+                                    w -> w,
+                                    (w1, w2) -> w1,
+                                    LinkedHashMap::new));
                     workMap.put(employee, dayMap);
                 });
 
+        // collect dates data from WorkHour to a list
+        List<LocalDate> allDates = workHours.stream()
+                .map(WorkHour::getDate)
+                .distinct()
+                .sorted()
+                .toList();
+
         model.addAttribute("workMap", workMap);
+        model.addAttribute("dates", allDates);
+
         return "workhour";
     }
 
@@ -99,4 +112,19 @@ public class WorkHoursController {
         return "redirect:../worklist";
     }
 
+    @RequestMapping(value = { "/edit/{id}"}, method = RequestMethod.GET)
+    public String editEmployee(@PathVariable("id") Long employeeId, Model model) {
+        Employee employee = employeeRepository.findById(employeeId).orElse(new Employee());
+        System.out.println("employee data " + employee.getId() + " name: " + employee.getFirstName());
+        model.addAttribute("employee", employeeRepository.findById(employeeId));
+        model.addAttribute("managers", managerRepository.findAll());
+        return "edit";
+    }
+
+    @RequestMapping(value = { "/update" }, method = RequestMethod.POST)
+    public String updateEmployee(Employee employee){
+        System.out.println("updating employee" + employee.getId() + "name" + employee.getFirstName());
+        employeeRepository.save(employee);
+        return "redirect:worklist";
+    }
 }

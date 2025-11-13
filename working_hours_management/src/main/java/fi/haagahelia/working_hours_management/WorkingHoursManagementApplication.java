@@ -2,6 +2,7 @@ package fi.haagahelia.working_hours_management;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.boot.CommandLineRunner;
@@ -27,15 +28,16 @@ public class WorkingHoursManagementApplication {
     @Bean
     public CommandLineRunner demo(EmployeeRepository employeeRepository, ManagerRepository managerRepository,
             WorkHourRepository workHourRepository) {
-        Manager manager1 = new Manager("Anna", "Johnson", "anna.johnson@company.com");
-        Manager manager2 = new Manager("John", "Smith", "john.smith@company.com");
-        Manager manager3 = new Manager("Maria", "Davis", "maria.davis@company.com");
-
-        managerRepository.save(manager1);
-        managerRepository.save(manager2);
-        managerRepository.save(manager3);
 
         return (args) -> {
+            Manager manager1 = new Manager("Anna", "Johnson", "anna.johnson@company.com");
+            Manager manager2 = new Manager("John", "Smith", "john.smith@company.com");
+            Manager manager3 = new Manager("Maria", "Davis", "maria.davis@company.com");
+
+            managerRepository.save(manager1);
+            managerRepository.save(manager2);
+            managerRepository.save(manager3);
+
             employeeRepository.save(new Employee("David", "Brown", "david.brown@company.com", manager1));
             employeeRepository.save(new Employee("Linda", "Miller", "linda.miller@company.com", manager1));
             employeeRepository.save(new Employee("Thomas", "Wilson", "thomas.wilson@company.com", manager1));

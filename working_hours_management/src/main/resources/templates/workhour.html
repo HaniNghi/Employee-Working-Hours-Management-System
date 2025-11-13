@@ -25,11 +25,7 @@
         <thead class="table-dark">
             <tr>
                 <th>Employee</th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
+                <th th:each="d : ${dates}" th:text="${#temporals.format(d, 'dd/MM/yyyy')}"></th>
                 <th>Manager</th>
             </tr>
         </thead>
@@ -37,31 +33,16 @@
             <tr th:each="entry : ${workMap}">
                 <td th:text="${entry.key.firstName + ' ' + entry.key.lastName}"></td>
 
-                <td
-                    th:text="${entry.value['MONDAY'] != null ? entry.value['MONDAY'].checkIn + ' - ' + entry.value['MONDAY'].checkOut : '-'}">
-                </td>
-                <td
-                    th:text="${entry.value['TUESDAY'] != null ? entry.value['TUESDAY'].checkIn + ' - ' + entry.value['TUESDAY'].checkOut : '-'}">
-                </td>
-                <td
-                    th:text="${entry.value['WEDNESDAY'] != null ? entry.value['WEDNESDAY'].checkIn + ' - ' + entry.value['WEDNESDAY'].checkOut : '-'}">
-                </td>
-                <td
-                    th:text="${entry.value['THURSDAY'] != null ? entry.value['THURSDAY'].checkIn + ' - ' + entry.value['THURSDAY'].checkOut : '-'}">
-                </td>
-                <td
-                    th:text="${entry.value['FRIDAY'] != null ? entry.value['FRIDAY'].checkIn + ' - ' + entry.value['FRIDAY'].checkOut : '-'}">
-                </td>
+                <td th:each="d : ${dates}" th:text="${entry.value.get(d) != null ?
+                entry.value.get(d).checkIn + ' - ' + entry.value.get(d).checkOut : '-'}"></td>
+
                 <td th:text="${entry.key.manager.firstName + ' ' + entry.key.manager.lastName}"></td>
             </tr>
         </tbody>
     </table>
 
-
     <a href="/addemployee" class="btn btn-primary">Add Employee</a>
     <a href="/worklist" class="btn btn-primary">Employees List</a>
-
-
 </body>
 
 </html>

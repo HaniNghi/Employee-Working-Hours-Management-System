@@ -22,9 +22,13 @@
 </head>
 
 <body>
-    <h1>Add employee</h1>
+    <h1>Edit employee</h1>
     <div>
-        <form th:object="${employee}" th:action="@{/save}" action="#" method="post">
+        <form th:object="${employee}" th:action="@{/update}" action="#" method="post">
+            <div style="display:none">
+                <label for="id">Id</label>
+                <input type="text" id="id" th:field="*{id}" readonly />
+            </div>
             <div class="first-name-container">
                 <label for="firstName">First name</label>
                 <input type="text" id="fistName" th:field="*{firstName}" />
@@ -48,24 +52,8 @@
                 </select>
             </div>
 
-
-            <hr />
-            <h3>First day</h3>
-
-            <div th:object="${workhour}">
-                <label>Date:</label>
-                <input type="date" th:field="*{date}" required/>
-
-                <label>Check-in:</label>
-                <input type="time" th:field="*{checkIn}" required/>
-
-                <label>Check-out:</label>
-                <input type="time" th:field="*{checkOut}" required/>
-            </div>
-
-            <br />
-            <div class="save-container">
-                <input class="btn btn-success" type="submit" value="Save" />
+            <div class="update-container">
+                <input class="btn btn-success" type="submit" value="Update" />
             </div>
         </form>
     </div>
