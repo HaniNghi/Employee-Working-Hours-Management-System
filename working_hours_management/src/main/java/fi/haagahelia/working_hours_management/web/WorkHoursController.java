@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.h2.engine.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -114,8 +115,8 @@ public class WorkHoursController {
 
     @RequestMapping(value = { "/edit/{id}"}, method = RequestMethod.GET)
     public String editEmployee(@PathVariable("id") Long employeeId, Model model) {
-        Employee employee = employeeRepository.findById(employeeId).orElse(new Employee());
-        System.out.println("employee data " + employee.getId() + " name: " + employee.getFirstName());
+        // Employee employee = employeeRepository.findById(employeeId).orElse(new Employee());
+        // System.out.println("employee data " + employee.getId() + " name: " + employee.getFirstName());
         model.addAttribute("employee", employeeRepository.findById(employeeId));
         model.addAttribute("managers", managerRepository.findAll());
         return "edit";
@@ -126,5 +127,13 @@ public class WorkHoursController {
         System.out.println("updating employee" + employee.getId() + "name" + employee.getFirstName());
         employeeRepository.save(employee);
         return "redirect:worklist";
+    }
+
+    @RequestMapping(value = { "/modify/{id}"}, method = RequestMethod.GET)
+    public String modifySchedule(@PathVariable("id") Long id, Model model ){
+        System.out.println("Get to modify page");
+        model.addAttribute("workhour", workHourRepository.findById(id));
+        model.addAttribute("employee", employeeRepository.findById(id));
+        return "modify";
     }
 }

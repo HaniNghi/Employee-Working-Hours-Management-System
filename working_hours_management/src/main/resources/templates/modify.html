@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Employees</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        form>div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        form {
+            width: 300px;
+        }
+
+        .manager-list-container>select {
+            width: 170px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Modify Schedule</h1>
+    <h3>Hello </h3>
+    <div>
+        <form th:object="${employee}" th:action="@{/save}" action="#" method="post">
+
+
+
+
+
+
+            <div th:object="${workhour}">
+                <label>Date:</label>
+                <input type="date" th:field="*{date}" required/>
+
+                <label>Check-in:</label>
+                <input type="time" th:field="*{checkIn}" required/>
+
+                <label>Check-out:</label>
+                <input type="time" th:field="*{checkOut}" required/>
+            </div>
+
+            <br />
+            <div class="save-container">
+                <input class="btn btn-success" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
