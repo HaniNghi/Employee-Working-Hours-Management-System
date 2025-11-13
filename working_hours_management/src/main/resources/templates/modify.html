@@ -4,51 +4,41 @@
 <head>
     <title>Employees</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style>
-        form>div {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        form {
-            width: 300px;
-        }
-
-        .manager-list-container>select {
-            width: 170px;
-        }
-    </style>
 </head>
 
 <body>
-    <h1>Modify Schedule</h1>
-    <h3>Hello </h3>
-    <div>
-        <form th:object="${employee}" th:action="@{/save}" action="#" method="post">
+    <h2>
+        Modify Work Hours for [[${employee.firstName}]] [[${employee.lastName}]]
+    </h2>
 
+    <form th:action="@{/modify/{id}(id=${employee.id})}" method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="wh, iterStat : ${workHours}">
+                    <td>
+                        <input type="date" th:name="workHours[__${iterStat.index}__].date" th:value="${wh.date}" />
+                    </td>
+                    <td>
+                        <input type="time" th:name="workHours[__${iterStat.index}__].checkIn"
+                            th:value="${wh.checkIn}" />
+                    </td>
+                    <td>
+                        <input type="time" th:name="workHours[__${iterStat.index}__].checkOut"
+                            th:value="${wh.checkOut}" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-
-
-
-
-            <div th:object="${workhour}">
-                <label>Date:</label>
-                <input type="date" th:field="*{date}" required/>
-
-                <label>Check-in:</label>
-                <input type="time" th:field="*{checkIn}" required/>
-
-                <label>Check-out:</label>
-                <input type="time" th:field="*{checkOut}" required/>
-            </div>
-
-            <br />
-            <div class="save-container">
-                <input class="btn btn-success" type="submit" value="Save" />
-            </div>
-        </form>
-    </div>
+        <button type="submit">Save</button>
+    </form>
 </body>
 
 </html>

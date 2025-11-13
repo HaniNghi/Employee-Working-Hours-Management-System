@@ -14,6 +14,7 @@ import org.h2.engine.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -113,27 +114,45 @@ public class WorkHoursController {
         return "redirect:../worklist";
     }
 
-    @RequestMapping(value = { "/edit/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = { "/edit/{id}" }, method = RequestMethod.GET)
     public String editEmployee(@PathVariable("id") Long employeeId, Model model) {
-        // Employee employee = employeeRepository.findById(employeeId).orElse(new Employee());
-        // System.out.println("employee data " + employee.getId() + " name: " + employee.getFirstName());
+        // Employee employee = employeeRepository.findById(employeeId).orElse(new
+        // Employee());
+        // System.out.println("employee data " + employee.getId() + " name: " +
+        // employee.getFirstName());
         model.addAttribute("employee", employeeRepository.findById(employeeId));
         model.addAttribute("managers", managerRepository.findAll());
         return "edit";
     }
 
     @RequestMapping(value = { "/update" }, method = RequestMethod.POST)
-    public String updateEmployee(Employee employee){
+    public String updateEmployee(Employee employee) {
         System.out.println("updating employee" + employee.getId() + "name" + employee.getFirstName());
         employeeRepository.save(employee);
         return "redirect:worklist";
     }
 
-    @RequestMapping(value = { "/modify/{id}"}, method = RequestMethod.GET)
-    public String modifySchedule(@PathVariable("id") Long id, Model model ){
-        System.out.println("Get to modify page");
-        model.addAttribute("workhour", workHourRepository.findById(id));
-        model.addAttribute("employee", employeeRepository.findById(id));
+    @RequestMapping(value = { "/modify/{id}" }, method = RequestMethod.GET)
+    public String modifyWorkHoursForm(@PathVariable("id") Long employeeId, Model model) {
+        Employee employee = employeeRepository.findById(employeeId).orElse(new Employee());
+
+        List<WorkHour> workHours = workHourRepository.findByEmployeeId(employeeId);
+
+        model.addAttribute("employee", employee);
+        model.addAttribute("workHours", workHours);
+
         return "modify";
+    }
+
+    @RequestMapping(value = {"/modify/{id}"}, method = RequestMethod.POST)
+    public String modifyWorkHoursSubmit(@PathVariable("id") Long employeeId,
+            @ModelAttribute("workHours") List<WorkHour> workHours) {
+        Employee employee = employeeRepository.findById(employeeId).orElse(new Employee());
+
+        for (WorkHour wh : workHours) {
+            wh.setEmployee(employee);
+            workHourRepository.save(wh);
+        }
+        return "redirect:/workhour";
     }
 }
