@@ -174,4 +174,25 @@ public class WorkHoursController {
         return "redirect:/workhour";
     }
 
+    @RequestMapping(value = "/addday", method = RequestMethod.GET)
+    public String addWorkDay(@RequestParam("employeeId") Long employeeId, Model model) {
+        model.addAttribute("employeeId", employeeId);
+        return "addday";
+    }
+
+    @RequestMapping(value = "/createday", method = RequestMethod.POST)
+    public String createEmptyDay(@RequestParam("employeeId") Long employeeId,
+            @RequestParam("date") String date) {
+
+        WorkHour workHour = new WorkHour();
+        workHour.setEmployee(employeeRepository.findById(employeeId).orElse(null));
+        workHour.setDate(LocalDate.parse(date));
+        workHour.setCheckIn(null); // null time
+        workHour.setCheckOut(null); // null time
+
+        workHourRepository.save(workHour);
+
+        return "redirect:/workhour";
+    }
+
 }

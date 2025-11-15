@@ -27,7 +27,7 @@
                 <th>Employee</th>
                 <th th:each="d : ${dates}" th:text="${#temporals.format(d, 'dd/MM/yyyy')}"></th>
                 <th>Manager</th>
-
+                <th>Add day</th>
             </tr>
         </thead>
         <tbody>
@@ -37,26 +37,28 @@
                 <td th:each="d : ${dates}">
                     <span th:if="${entry.value.get(d) != null}">
                         <a class="btn btn-outline-primary btn-sm"
-                            th:href="@{/editworkhour/{id}(id=${entry.value.get(d).id})}"
-                            th:text="${entry.value.get(d).checkIn + ' - ' + entry.value.get(d).checkOut}">
+                            th:href="@{/editworkhour/{id}(id=${entry.value.get(d).id})}" th:text="${entry.value.get(d).checkIn != null ? entry.value.get(d).checkIn : '-'} + ' - ' +
+                    ${entry.value.get(d).checkOut != null ? entry.value.get(d).checkOut : '-'}">
                         </a>
                     </span>
 
                     <span th:if="${entry.value.get(d) == null}">
-                        <a class="btn btn-outline-secondary btn-sm"
-                            th:href="@{/addworkhour(employeeId=${entry.key.id}, date=${d})}">
-                            Add
-                        </a>
+                        -
                     </span>
                 </td>
-
                 <td th:text="${entry.key.manager.firstName + ' ' + entry.key.manager.lastName}"></td>
+                <td>
+                    <a class="btn btn-primary btn-sm" th:href="@{/addday(employeeId=${entry.key.id})}">
+                        Add Day
+                    </a>
+                </td>
             </tr>
         </tbody>
     </table>
 
     <a href="/addemployee" class="btn btn-primary">Add Employee</a>
     <a href="/worklist" class="btn btn-primary">Employees List</a>
+
 </body>
 
 </html>
