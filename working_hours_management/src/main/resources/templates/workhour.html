@@ -27,29 +27,36 @@
                 <th>Employee</th>
                 <th th:each="d : ${dates}" th:text="${#temporals.format(d, 'dd/MM/yyyy')}"></th>
                 <th>Manager</th>
-                <th>Modify Schedule</th>
+
             </tr>
         </thead>
         <tbody>
             <tr th:each="entry : ${workMap}">
                 <td th:text="${entry.key.firstName + ' ' + entry.key.lastName}"></td>
 
-                <td th:each="d : ${dates}" th:text="${entry.value.get(d) != null ?
-                entry.value.get(d).checkIn + ' - ' + entry.value.get(d).checkOut : '-'}"></td>
+                <td th:each="d : ${dates}">
+                    <span th:if="${entry.value.get(d) != null}">
+                        <a class="btn btn-outline-primary btn-sm"
+                            th:href="@{/editworkhour/{id}(id=${entry.value.get(d).id})}"
+                            th:text="${entry.value.get(d).checkIn + ' - ' + entry.value.get(d).checkOut}">
+                        </a>
+                    </span>
+
+                    <span th:if="${entry.value.get(d) == null}">
+                        <a class="btn btn-outline-secondary btn-sm"
+                            th:href="@{/addworkhour(employeeId=${entry.key.id}, date=${d})}">
+                            Add
+                        </a>
+                    </span>
+                </td>
 
                 <td th:text="${entry.key.manager.firstName + ' ' + entry.key.manager.lastName}"></td>
-                <td >
-                    <a class="btn btn-success" th:href="@{/modify/{id}(id=${entry.key.id})}">Modify</a>
-                </td>
             </tr>
-
         </tbody>
     </table>
 
     <a href="/addemployee" class="btn btn-primary">Add Employee</a>
     <a href="/worklist" class="btn btn-primary">Employees List</a>
-    <a href="/modify" class="btn btn-primary">Modify my Schedule</a>
-
 </body>
 
 </html>

@@ -127,32 +127,51 @@ public class WorkHoursController {
 
     @RequestMapping(value = { "/update" }, method = RequestMethod.POST)
     public String updateEmployee(Employee employee) {
-        System.out.println("updating employee" + employee.getId() + "name" + employee.getFirstName());
         employeeRepository.save(employee);
         return "redirect:worklist";
     }
 
-    @RequestMapping(value = { "/modify/{id}" }, method = RequestMethod.GET)
-    public String modifyWorkHoursForm(@PathVariable("id") Long employeeId, Model model) {
-        Employee employee = employeeRepository.findById(employeeId).orElse(new Employee());
-
-        List<WorkHour> workHours = workHourRepository.findByEmployeeId(employeeId);
-
-        model.addAttribute("employee", employee);
-        model.addAttribute("workHours", workHours);
-
-        return "modify";
+    @RequestMapping(value = "/editworkhour/{id}", method = RequestMethod.GET)
+    public String editWorkHour(@PathVariable("id") Long id, Model model) {
+        Optional<WorkHour> workHour = workHourRepository.findById(id);
+        if (workHour.isEmpty()) {
+            return "redirect:/workhour";
+        }
+        model.addAttribute("workhour", workHour.get());
+        model.addAttribute("employees", employeeRepository.findAll());
+        return "editworkhour";
     }
 
-    @RequestMapping(value = {"/modify/{id}"}, method = RequestMethod.POST)
-    public String modifyWorkHoursSubmit(@PathVariable("id") Long employeeId,
-            @ModelAttribute("workHours") List<WorkHour> workHours) {
-        Employee employee = employeeRepository.findById(employeeId).orElse(new Employee());
-
-        for (WorkHour wh : workHours) {
-            wh.setEmployee(employee);
-            workHourRepository.save(wh);
-        }
+    @RequestMapping(value = "/updateworkhour", method = RequestMethod.POST)
+    public String updateWorkHour(@ModelAttribute WorkHour workHour,
+            @RequestParam("employee") Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId).orElse(null);
+        workHour.setEmployee(employee);
+        workHourRepository.save(workHour);
         return "redirect:/workhour";
     }
+
+    @RequestMapping(value = "/addworkhour", method = RequestMethod.GET)
+    public String addWorkHour(@RequestParam("employeeId") Long employeeId,
+            @RequestParam("date") String date,
+            Model model) {
+
+        WorkHour wh = new WorkHour();
+        wh.setDate(LocalDate.parse(date));
+        wh.setEmployee(employeeRepository.findById(employeeId).orElse(null));
+
+        model.addAttribute("workhour", wh);
+        return "addworkhour";
+    }
+
+    @RequestMapping(value = "/saveworkhour", method = RequestMethod.POST)
+    public String saveWorkHour(@ModelAttribute WorkHour workhour,
+            @RequestParam("employeeId") Long employeeId) {
+
+        workhour.setEmployee(employeeRepository.findById(employeeId).orElse(null));
+        workHourRepository.save(workhour);
+
+        return "redirect:/workhour";
+    }
+
 }
