@@ -42,9 +42,7 @@
                         </a>
                     </span>
 
-                    <span th:if="${entry.value.get(d) == null}">
-                        -
-                    </span>
+                    <span th:if="${entry.value.get(d) == null}"> - </span>
                 </td>
                 <td th:text="${entry.key.manager.firstName + ' ' + entry.key.manager.lastName}"></td>
                 <td>
@@ -58,7 +56,9 @@
 
     <a href="/addemployee" class="btn btn-primary">Add Employee</a>
     <a href="/worklist" class="btn btn-primary">Employees List</a>
-
+    <form th:action="@{/logout}" method="post" class="d-inline">
+        <button type="submit" class="btn btn-danger float-end">Logout</button>
+    </form>
 </body>
 
 </html>

@@ -10,8 +10,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.h2.engine.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +29,8 @@ import fi.haagahelia.working_hours_management.service.WorkHoursService;
 
 @Controller
 public class WorkHoursController {
+
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     private EmployeeRepository employeeRepository;
     @Autowired
@@ -39,10 +41,11 @@ public class WorkHoursController {
     private WorkHoursService workHoursService;
 
     public WorkHoursController(EmployeeRepository employeeRepository, ManagerRepository managerRepository,
-            WorkHourRepository workHourRepository, WorkHoursService workHoursService) {
+            WorkHourRepository workHourRepository, WorkHoursService workHoursService, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
         this.managerRepository = managerRepository;
         this.workHourRepository = workHourRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping("/worklist")
@@ -97,6 +100,9 @@ public class WorkHoursController {
     public String save(Employee employee, @RequestParam("date") String date,
             @RequestParam("checkIn") String checkIn,
             @RequestParam("checkOut") String checkOut) {
+
+        // Encode password before saving
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         Employee savedEmployee = employeeRepository.save(employee);
         WorkHour workHour = new WorkHour();
         workHour.setEmployee(savedEmployee);
