@@ -25,6 +25,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/forgot-password", "/reset-password").permitAll()
+                        // Only managers can access /employees and add employees
+                        .requestMatchers("/employees/**", "/addemployee", "/save").hasRole("MANAGER")
+                        // workhours, all authenticated users have permissions, but detailed permissions will be checked in the controller.
+                        .requestMatchers("/workhour/**").authenticated()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

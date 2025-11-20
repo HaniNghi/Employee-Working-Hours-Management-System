@@ -11,6 +11,10 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +44,16 @@ public class WorkHoursController {
     @Autowired
     private WorkHoursService workHoursService;
 
+    private boolean isManager() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MANAGER"));
+    }
+
+    private String currentUsername() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName();
+    }
+
     public WorkHoursController(EmployeeRepository employeeRepository, ManagerRepository managerRepository,
             WorkHourRepository workHourRepository, WorkHoursService workHoursService, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
@@ -50,6 +64,9 @@ public class WorkHoursController {
 
     @RequestMapping("/worklist")
     public String employeeList(Model model) {
+        if (!isManager()) {
+            throw new AccessDeniedException("You do not have permission to access the employee list!");
+        }
         model.addAttribute("employees", employeeRepository.findAll());
         return "worklist";
     }
@@ -60,22 +77,37 @@ public class WorkHoursController {
 
         Map<Employee, Map<LocalDate, WorkHour>> workMap = new LinkedHashMap<>();
 
-        // group work hours by employee
-        workHours.stream()
-                .collect(Collectors.groupingBy(WorkHour::getEmployee,
-                        () -> new TreeMap<>(Comparator.comparing(Employee::getId)), // sorting by id
-                        Collectors.toList()))
-                .forEach((employee, whList) -> {
-                    Map<LocalDate, WorkHour> dayMap = whList.stream()
-                            .collect(Collectors.toMap(
-                                    WorkHour::getDate,
-                                    w -> w,
-                                    (w1, w2) -> w1,
-                                    LinkedHashMap::new));
-                    workMap.put(employee, dayMap);
-                });
+        if (isManager()) {
+            // Manager xem tất cả
+            workHours.stream()
+                    .collect(Collectors.groupingBy(WorkHour::getEmployee,
+                            () -> new TreeMap<>(Comparator.comparing(Employee::getId)),
+                            Collectors.toList()))
+                    .forEach((employee, whList) -> {
+                        Map<LocalDate, WorkHour> dayMap = whList.stream()
+                                .collect(Collectors.toMap(
+                                        WorkHour::getDate,
+                                        w -> w,
+                                        (w1, w2) -> w1,
+                                        LinkedHashMap::new));
+                        workMap.put(employee, dayMap);
+                    });
+        } else {
+            // Employee chỉ xem của mình
+            Employee emp = employeeRepository.findByUsername(currentUsername()).orElseThrow();
+            List<WorkHour> empHours = workHours.stream()
+                    .filter(wh -> wh.getEmployee().getId().equals(emp.getId()))
+                    .toList();
 
-        // collect dates data from WorkHour to a list
+            Map<LocalDate, WorkHour> dayMap = empHours.stream()
+                    .collect(Collectors.toMap(
+                            WorkHour::getDate,
+                            w -> w,
+                            (w1, w2) -> w1,
+                            LinkedHashMap::new));
+            workMap.put(emp, dayMap);
+        }
+
         List<LocalDate> allDates = workHours.stream()
                 .map(WorkHour::getDate)
                 .distinct()
@@ -84,12 +116,14 @@ public class WorkHoursController {
 
         model.addAttribute("workMap", workMap);
         model.addAttribute("dates", allDates);
-
         return "workhour";
     }
 
     @RequestMapping(value = { "/addemployee" })
     public String addEmployee(Model model) {
+        if (!isManager()) {
+            throw new AccessDeniedException("You do not have permission to add employees!");
+        }
         model.addAttribute("employee", new Employee());
         model.addAttribute("managers", managerRepository.findAll());
         model.addAttribute("workhour", new WorkHour());
@@ -100,7 +134,9 @@ public class WorkHoursController {
     public String save(Employee employee, @RequestParam("date") String date,
             @RequestParam("checkIn") String checkIn,
             @RequestParam("checkOut") String checkOut) {
-
+        if (!isManager()) {
+            throw new AccessDeniedException("You do not have permission to add employees!");
+        }
         // Encode password before saving
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         Employee savedEmployee = employeeRepository.save(employee);
@@ -139,20 +175,29 @@ public class WorkHoursController {
 
     @RequestMapping(value = "/editworkhour/{id}", method = RequestMethod.GET)
     public String editWorkHour(@PathVariable("id") Long id, Model model) {
-        Optional<WorkHour> workHour = workHourRepository.findById(id);
-        if (workHour.isEmpty()) {
-            return "redirect:/workhour";
+        WorkHour workHour = workHourRepository.findById(id).orElseThrow();
+        if (!isManager() && !workHour.getEmployee().getUsername().equals(currentUsername())) {
+            throw new AccessDeniedException("You do not have permission to edit this calendar!");
         }
-        model.addAttribute("workhour", workHour.get());
-        model.addAttribute("employees", employeeRepository.findAll());
+        model.addAttribute("workhour", workHour);
+
+        // Employee cannot change employee when adjusting time
+        if (isManager()) {
+            model.addAttribute("employees", employeeRepository.findAll());
+        }
         return "editworkhour";
     }
 
     @RequestMapping(value = "/updateworkhour", method = RequestMethod.POST)
     public String updateWorkHour(@ModelAttribute WorkHour workHour,
             @RequestParam("employee") Long employeeId) {
-        Employee employee = employeeRepository.findById(employeeId).orElse(null);
-        workHour.setEmployee(employee);
+        if (!isManager()) {
+            // employee can not employeeId
+            Employee emp = employeeRepository.findByUsername(currentUsername()).orElseThrow();
+            workHour.setEmployee(emp);
+        } else {
+            workHour.setEmployee(employeeRepository.findById(employeeId).orElse(null));
+        }
         workHourRepository.save(workHour);
         return "redirect:/workhour";
     }
@@ -189,7 +234,10 @@ public class WorkHoursController {
     @RequestMapping(value = "/createday", method = RequestMethod.POST)
     public String createEmptyDay(@RequestParam("employeeId") Long employeeId,
             @RequestParam("date") String date) {
-
+        if (!isManager()
+                && !employeeRepository.findById(employeeId).orElseThrow().getUsername().equals(currentUsername())) {
+            throw new AccessDeniedException("You do not have permission to add days for this employee!");
+        }
         WorkHour workHour = new WorkHour();
         workHour.setEmployee(employeeRepository.findById(employeeId).orElse(null));
         workHour.setDate(LocalDate.parse(date));

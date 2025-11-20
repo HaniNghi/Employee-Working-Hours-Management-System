@@ -39,7 +39,7 @@ public class WorkingHoursManagementApplication {
             managerRepository.save(manager2);
             managerRepository.save(manager3);
 
-            employeeRepository.save(new Employee("David", "Brown", "libraray2021@gmail.com", manager1, "david", passwordEncoder.encode("1234")));
+            employeeRepository.save(new Employee("David", "Brown", "vmmn27@gmail.com", manager1, "david", passwordEncoder.encode("1234")));
             employeeRepository.save(new Employee("Linda", "Miller", "linda.miller@company.com", manager1, "linda",  passwordEncoder.encode("1234")));
             employeeRepository.save(new Employee("Thomas", "Wilson", "thomas.wilson@company.com", manager1, "thomas", passwordEncoder.encode("1234")));
             employeeRepository.save(new Employee("Kevin", "Taylor", "kevin.taylor@company.com", manager2, "kevin", passwordEncoder.encode("1234")));

@@ -32,6 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<Employee> empOpt = employeeRepository.findByUsername(username);
         if (empOpt.isPresent()) {
             var emp = empOpt.get();
+            System.out.println("Employee role: ROLE_EMPLOYEE");
             return new User(emp.getUsername(), emp.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_EMPLOYEE")));
 
         }

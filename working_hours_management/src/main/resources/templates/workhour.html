@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <title>Working Hours List</title>
@@ -54,8 +55,9 @@
         </tbody>
     </table>
 
-    <a href="/addemployee" class="btn btn-primary">Add Employee</a>
-    <a href="/worklist" class="btn btn-primary">Employees List</a>
+    <a href="/addemployee" class="btn btn-primary" sec:authorize="hasRole('ROLE_MANAGER')">Add Employee</a>
+    <a href="/worklist" class="btn btn-primary" sec:authorize="hasRole('ROLE_MANAGER')">Employees List</a>
+
     <form th:action="@{/logout}" method="post" class="d-inline">
         <button type="submit" class="btn btn-danger float-end">Logout</button>
     </form>

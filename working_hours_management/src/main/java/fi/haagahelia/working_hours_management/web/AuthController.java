@@ -7,14 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.MailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ch.qos.logback.core.model.Model;
 import fi.haagahelia.working_hours_management.domain.Employee;
 import fi.haagahelia.working_hours_management.domain.EmployeeRepository;
 import fi.haagahelia.working_hours_management.domain.Manager;
@@ -33,7 +32,7 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private MailSender mailSender;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -92,7 +91,8 @@ public class AuthController {
 
             model.addAttribute("message", "New password has been sent to your email.");
         } catch (Exception e) {
-            model.addAttribute("error", "Failed to send email. Check your mail configuration.");
+
+            model.addAttribute("error", "Failed to send email. Check your mail configuration." + e);
         }
         return "forgot-password";
     }
