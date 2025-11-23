@@ -62,7 +62,6 @@ public class WorkHoursController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // display all employees information
     @RequestMapping("/worklist")
     public String employeeList(Model model) {
         if (!isManager()) {
@@ -71,7 +70,7 @@ public class WorkHoursController {
         model.addAttribute("employees", employeeRepository.findAll());
         return "worklist";
     }
-    // display employees work hours
+
     @RequestMapping(value = { "/workhour" })
     public String workhour(Model model) {
         List<WorkHour> workHours = workHoursService.getAllWorkHours();
@@ -79,7 +78,7 @@ public class WorkHoursController {
         Map<Employee, Map<LocalDate, WorkHour>> workMap = new LinkedHashMap<>();
 
         if (isManager()) {
-            // Manager can see all employees work hours
+            // Manager xem tất cả
             workHours.stream()
                     .collect(Collectors.groupingBy(WorkHour::getEmployee,
                             () -> new TreeMap<>(Comparator.comparing(Employee::getId)),
@@ -94,7 +93,7 @@ public class WorkHoursController {
                         workMap.put(employee, dayMap);
                     });
         } else {
-            // Employee can only see his/her work hours
+            // Employee chỉ xem của mình
             Employee emp = employeeRepository.findByUsername(currentUsername()).orElseThrow();
             List<WorkHour> empHours = workHours.stream()
                     .filter(wh -> wh.getEmployee().getId().equals(emp.getId()))
@@ -119,7 +118,7 @@ public class WorkHoursController {
         model.addAttribute("dates", allDates);
         return "workhour";
     }
-    // add a new employee to company
+
     @RequestMapping(value = { "/addemployee" })
     public String addEmployee(Model model) {
         if (!isManager()) {
@@ -130,7 +129,7 @@ public class WorkHoursController {
         model.addAttribute("workhour", new WorkHour());
         return "addemployee";
     }
-    // save new employee information
+
     @RequestMapping(value = { "/save" }, method = RequestMethod.POST)
     public String save(Employee employee, @RequestParam("date") String date,
             @RequestParam("checkIn") String checkIn,
@@ -150,13 +149,13 @@ public class WorkHoursController {
         workHourRepository.save(workHour);
         return "redirect:workhour";
     }
-    // delete employee that dont need anymore
+
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deleteEmployee(@PathVariable("id") Long id, Model model) {
         employeeRepository.deleteById(id);
         return "redirect:../worklist";
     }
-    // edit employee's information
+
     @RequestMapping(value = { "/edit/{id}" }, method = RequestMethod.GET)
     public String editEmployee(@PathVariable("id") Long employeeId, Model model) {
         // Employee employee = employeeRepository.findById(employeeId).orElse(new
@@ -167,33 +166,33 @@ public class WorkHoursController {
         model.addAttribute("managers", managerRepository.findAll());
         return "edit";
     }
-    // save employee information that editted
+
     @RequestMapping(value = { "/update" }, method = RequestMethod.POST)
     public String updateEmployee(Employee employee) {
         employeeRepository.save(employee);
         return "redirect:worklist";
     }
-    // edit time schedule (work hours)
+
     @RequestMapping(value = "/editworkhour/{id}", method = RequestMethod.GET)
     public String editWorkHour(@PathVariable("id") Long id, Model model) {
         WorkHour workHour = workHourRepository.findById(id).orElseThrow();
-        // employee can only change his/her time schedule
         if (!isManager() && !workHour.getEmployee().getUsername().equals(currentUsername())) {
             throw new AccessDeniedException("You do not have permission to edit this calendar!");
         }
         model.addAttribute("workhour", workHour);
-        // manager can edit time of all employees
+
+        // Employee cannot change employee when adjusting time
         if (isManager()) {
             model.addAttribute("employees", employeeRepository.findAll());
         }
         return "editworkhour";
     }
 
-    // save work hours just editted
     @RequestMapping(value = "/updateworkhour", method = RequestMethod.POST)
     public String updateWorkHour(@ModelAttribute WorkHour workHour,
             @RequestParam("employee") Long employeeId) {
         if (!isManager()) {
+            // employee can not employeeId
             Employee emp = employeeRepository.findByUsername(currentUsername()).orElseThrow();
             workHour.setEmployee(emp);
         } else {
@@ -203,7 +202,6 @@ public class WorkHoursController {
         return "redirect:/workhour";
     }
 
-    // add new work hour
     @RequestMapping(value = "/addworkhour", method = RequestMethod.GET)
     public String addWorkHour(@RequestParam("employeeId") Long employeeId,
             @RequestParam("date") String date,
@@ -217,7 +215,6 @@ public class WorkHoursController {
         return "addworkhour";
     }
 
-    // save new work hour
     @RequestMapping(value = "/saveworkhour", method = RequestMethod.POST)
     public String saveWorkHour(@ModelAttribute WorkHour workhour,
             @RequestParam("employeeId") Long employeeId) {
@@ -228,14 +225,12 @@ public class WorkHoursController {
         return "redirect:/workhour";
     }
 
-    // add new day that doesnt have work hours yet
     @RequestMapping(value = "/addday", method = RequestMethod.GET)
     public String addWorkDay(@RequestParam("employeeId") Long employeeId, Model model) {
         model.addAttribute("employeeId", employeeId);
         return "addday";
     }
 
-    // save new day just added
     @RequestMapping(value = "/createday", method = RequestMethod.POST)
     public String createEmptyDay(@RequestParam("employeeId") Long employeeId,
             @RequestParam("date") String date) {
