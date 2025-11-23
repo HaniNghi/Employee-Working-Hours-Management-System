@@ -30,6 +30,7 @@ public class WorkingHoursManagementApplication {
             WorkHourRepository workHourRepository, PasswordEncoder passwordEncoder) {
 
         return (args) -> {
+            // create dummy manager data
             Manager manager1 = new Manager("Anna", "Johnson", "anna.johnson@company.com", "anna", passwordEncoder.encode("pass1234"));
             Manager manager2 = new Manager("John", "Smith", "john.smith@company.com", "john", passwordEncoder.encode("pass1234"));
             Manager manager3 = new Manager("Maria", "Davis", "maria.davis@company.com", "maria", passwordEncoder.encode("pass1234"));
@@ -38,6 +39,7 @@ public class WorkingHoursManagementApplication {
             managerRepository.save(manager2);
             managerRepository.save(manager3);
 
+            // create dummy employee data
             employeeRepository.save(new Employee("David", "Brown", "vmmn27@gmail.com", manager1, "david", passwordEncoder.encode("1234")));
             employeeRepository.save(new Employee("Linda", "Miller", "linda.miller@company.com", manager1, "linda",  passwordEncoder.encode("1234")));
             employeeRepository.save(new Employee("Thomas", "Wilson", "thomas.wilson@company.com", manager1, "thomas", passwordEncoder.encode("1234")));
