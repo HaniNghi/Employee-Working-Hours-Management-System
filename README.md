@@ -1,26 +1,50 @@
-﻿# Employee-Working-Hours-Management-System
+# Employee Working Hours Management System
 
-OVERVIEW
+The **Employee Working Hours Management System** is a web-based application designed to help organizations efficiently manage employee information and track working hours.  
+The system provides two types of user roles — **Manager** and **Employee** — each with different permissions and features.
 
-    The system is designed to simplify workforce time management in organizations:
-        Employees log their working hours (check-in/check-out or planned shifts). Once submitted, records are locked to ensure transparency.
-        Managers review and approve/reject submitted work hours. Employees cannot alter records unless changes are explicitly approved by a manager.
-        Admins manage users, roles, and departments, ensuring proper access control and data integrity.
-    This model ensures accountability, prevents unauthorized edits, and provides a clear audit trail of working hours.
+---
 
-FEATURES
+## 🚀 Features
 
-    User Authentication & Authorization
-        Registration & login with JWT-based security
-        Role-based access control (ADMIN, MANAGER, EMPLOYEE)
+### 🔐 Authentication & Authorization
+- **Login with Role Selection**: Users log in as either:
+  - **Manager**
+  - **Employee**
+- **Forgot Password Functionality**:
+  - If a user forgets their password, a **new password is automatically generated and sent to the email** saved in the system.
 
-    Employee Working Hours
-        Employees register their working hours
-        Once submitted, entries are locked from modification
-        Managers approve, reject, or request changes
+---
 
-    Employee Management
-        CRUD operations for employees (Admin/Manager only)
-        Department and role assignments
+## 👩‍💼 Manager Features
 
+Managers have full administrative control, including employee and working-hours management.
 
+### 👥 Employee Management
+- **View Employee List**: Access a complete list of employees currently in the system.
+- **Add New Employee**: Create and register new employee profiles.
+- **Edit Employee Information**: Update employee details when needed.
+- **Delete Employee**: Remove an employee from the system.
+
+### ⏱️ Working Hours Management
+- **Adjust Working Hours for All Employees**: Modify working hours in bulk for the entire workforce.
+- **Add New Working Days for All Employees**: Assign working days to every employee simultaneously.
+
+---
+
+## 👨‍💼 Employee Features
+
+Employees have limited permissions focused on managing their own working hours.
+
+### ⏰ Personal Working Hours
+- **View Own Working Hours**: Access personal working-time records.
+- **Edit Own Working Hours**: Update or correct one's working hours.
+- **Add New Working Day**: Add a new working day entry for personal records.
+
+---
+
+## 📧 Password Recovery
+When a user forgets their password:
+- The system verifies the email on file.
+- Automatically generates a new secure password.
+- Sends the new password directly to the registered email.
