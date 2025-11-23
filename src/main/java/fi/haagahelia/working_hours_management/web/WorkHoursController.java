@@ -192,7 +192,7 @@ public class WorkHoursController {
     // save work hours just editted
     @RequestMapping(value = "/updateworkhour", method = RequestMethod.POST)
     public String updateWorkHour(@ModelAttribute WorkHour workHour,
-            @RequestParam("employee") Long employeeId) {
+            @RequestParam(value = "employee", required = false) Long employeeId) {
         if (!isManager()) {
             Employee emp = employeeRepository.findByUsername(currentUsername()).orElseThrow();
             workHour.setEmployee(emp);
