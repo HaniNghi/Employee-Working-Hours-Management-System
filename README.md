@@ -2,6 +2,7 @@
 Heroku link: https://working-hours-management-b8c84ef1806b.herokuapp.com/login
 The **Employee Working Hours Management System** is a web-based application designed to help organizations efficiently manage employee information and track working hours.  
 The system provides two types of user roles — **Manager** and **Employee** — each with different permissions and features.
+<img width="1353" height="608" alt="Screenshot 2026-11-11 at 11 38 11" src="https://github.com/user-attachments/assets/df029508-80f2-432e-a2c9-4cded643423e" />
 
 ---
 
